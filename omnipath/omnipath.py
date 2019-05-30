@@ -37,7 +37,7 @@ network = main.PyPath()
 
 if os.path.exists(network_pickle_path):
     
-    network.load_network(pfile = network_pickle_path)
+    network.init_network(pfile = network_pickle_path)
     
 else:
     
