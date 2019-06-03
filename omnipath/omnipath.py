@@ -15,39 +15,44 @@
 import os
 import copy
 
-from pypath import main
+from pypath import main as pypath_main
 from pypath import data_formats
 from pypath import intercell
 from pypath import cellphonedb
 from pypath import settings
 
-settings.setup(network_expand_complexes = False)
 
-output_dir = os.path.join(
-    '..',
-    'cellphonedb',
-    'src',
-    'core',
-    'data',
-)
-
-network_pickle_path = 'omnipath_for_cellphonedb.pickle'
-
-network = main.PyPath()
-
-if os.path.exists(network_pickle_path):
+def main():
     
-    network.init_network(pfile = network_pickle_path)
-    
-else:
-    
-    network_input = copy.deepcopy(data_formats.omnipath)
-    network_input.update(data_formats.ligand_receptor)
-    network_input.update(data_formats.ptm_misc)
-    network.load_omnipath(omnipath = network_input, remove_htp = False)
+    settings.setup(network_expand_complexes = False)
 
-c = cellphonedb.CellPhoneDB(
-    network = network,
-    output_dir = output_dir,
-)
-c.main()
+    output_dir = os.path.join(
+        '..',
+        'cellphonedb',
+        'src',
+        'core',
+        'data',
+    )
+
+    network_pickle_path = 'omnipath_for_cellphonedb.pickle'
+
+    network = pypath_main.PyPath()
+
+    if os.path.exists(network_pickle_path):
+        
+        network.init_network(pfile = network_pickle_path)
+        
+    else:
+        
+        network_input = copy.deepcopy(data_formats.omnipath)
+        network_input.update(data_formats.ligand_receptor)
+        network_input.update(data_formats.ptm_misc)
+        network.load_omnipath(omnipath = network_input, remove_htp = False)
+
+    c = cellphonedb.CellPhoneDB(
+        network = network,
+        output_dir = output_dir,
+    )
+    c.main()
+    
+    return c
