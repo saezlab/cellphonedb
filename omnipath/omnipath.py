@@ -72,6 +72,6 @@ class OmnipathCellphonedb(omnipath.OmniPath):
         self.cellphonedb = cellphonedb.CellPhoneDB(
             network = self.network,
             annotation = self.intercell,
-            output_dir = output_dir,
+            output_dir = self.output_dir,
         )
         self.cellphonedb.main()
