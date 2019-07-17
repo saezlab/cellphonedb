@@ -15,12 +15,11 @@
 import os
 import copy
 
-from pypath import omnipath
 from pypath import cellphonedb
 from pypath import settings
 
 
-class OmnipathCellphonedb(omnipath.OmniPath):
+class OmnipathCellphonedb(cellphonedb.CellPhoneDB):
     
     
     def __init__(
@@ -30,6 +29,7 @@ class OmnipathCellphonedb(omnipath.OmniPath):
         annotation_pickle = None,
         intercell_pickle = None,
         complex_pickle = None,
+        **kwargs
     ):
         
         settings.setup(network_expand_complexes = False)
@@ -45,33 +45,19 @@ class OmnipathCellphonedb(omnipath.OmniPath):
             )
         )
         
-        self.network_pickle = (
-            network_pickle or 'omnipath_for_cellphonedb.pickle'
+        cellphonedb.CellPhoneDB.__init__(
+            self,
+            network_pickle = (
+                network_pickle or 'omnipath_for_cellphonedb.pickle'
+            ),
+            annotation_pickle = (
+                annotation_pickle or 'omnipath_annot.pickle'
+            ),
+            intercell_pickle = (
+                intercell_pickle or 'omnipath_intercell.pickle'
+            ),
+            complex_pickle = (
+                complex_pickle or 'omnipath_complexes.pickle'
+            ),
+            **kwargs
         )
-        self.intercell_pickle = (
-            intercell_pickle or 'omnipath_intercell.pickle'
-        )
-        self.annotation_pickle = (
-            annotation_pickle or 'omnipath_annot.pickle'
-        )
-        self.complex_pickle = (
-            complex_pickle or 'omnipath_complexes.pickle'
-        )
-        
-        omnipath.OmniPath.__init__(self)
-    
-    
-    def main(self):
-        
-        omnipath.OmniPath.main(self)
-        self.build()
-    
-    
-    def build(self):
-        
-        self.cellphonedb = cellphonedb.CellPhoneDB(
-            network = self.network,
-            annotation = self.intercell,
-            output_dir = self.output_dir,
-        )
-        self.cellphonedb.main()
